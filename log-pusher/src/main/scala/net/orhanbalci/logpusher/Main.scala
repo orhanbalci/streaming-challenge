@@ -30,11 +30,12 @@ object Main extends App {
       val cols = row.getString(0).split("\\s+").map(s => s.trim())
       LogStruct(s"${cols(0)} ${cols(1)}", cols(2), cols(3), cols(4))
     })
-    .select(to_json(struct("time", "logLevel", "center", "content")));
+    .select(to_json(struct("time", "logLevel", "center", "content")).alias("value"));
 
   val query = logStream.writeStream.format("kafka")
     .option("kafka.bootstrap.servers",sys.env("KAFKA_SERVER"))
     .option("topic","logs")
+    .option("checkpointLocation","./checkpoint")
     .start()
   query.awaitTermination()
 }
