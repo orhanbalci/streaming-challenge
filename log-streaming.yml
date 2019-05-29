@@ -47,3 +47,7 @@ services:
             - ./logs:/opt/app/logs
         depends_on:
             - kafka
+
+    log-db:
+        image: orhanbalci/log-db:latest
+        hostname: log-db
