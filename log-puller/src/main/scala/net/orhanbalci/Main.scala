@@ -20,6 +20,12 @@ import io.circe.syntax._
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
+import java.sql.Timestamp
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import slick.jdbc.PostgresProfile.api._
 
 object Main extends App {
@@ -48,8 +54,22 @@ object Main extends App {
       Slick.sink(
         logStruct =>
           logStruct match {
-            case Right(v) =>
-              sqlu"INSERT INTO logs VALUES (${v.time}, ${v.logLevel}, ${v.center}, ${v.content})"
+            case Right(v) => {
+              val log_time = Timestamp.from(
+                Instant.from(
+                  ZonedDateTime.of(
+                    LocalDateTime.from(
+                      DateTimeFormatter
+                        .ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                        .withZone(ZoneId.systemDefault())
+                        .parse(v.time)
+                    ),
+                    ZoneId.systemDefault()
+                  )
+                )
+              )
+              sqlu"INSERT INTO logs VALUES (${log_time}, ${v.logLevel}, ${v.center}, ${v.content})"
+            }
           }
       )
     )

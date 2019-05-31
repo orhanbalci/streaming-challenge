@@ -1,4 +1,4 @@
 FROM postgres 
-ENV postgres_db log_db
+ENV POSTGRES_DB log_db
 COPY db_init.sql /docker-entrypoint-initdb.d/
 

@@ -59,6 +59,6 @@ services:
         image: orhanbalci/log-puller:latest
         environment:
             KAFKA_SERVER: "kafka:19092"
-            POSTGRES_URL: "log-db"
+            POSTGRES_URL: "jdbc:postgresql://log-db:5432/log_db"
         depends_on:
             - kafka
