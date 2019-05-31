@@ -15,7 +15,7 @@ services:
             - ./zoo1/datalog/:/datalog
 
     kafka:
-        image: confluentinc/cp-kafka:5.2.1
+        image: confluentinc/cp-kafka:5.0.1
         hostname: kafka
         ports:
             - "9092:9092"
@@ -26,7 +26,7 @@ services:
             KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
             KAFKA_BROKER_ID: 1
             KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.aysnc.DefaultEventHandler=INFO,state.change.logger=INFO"
-            KAFKA_OFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
         volumes:
             - ./kafka/data:/var/lib/kafka/data
         depends_on:
@@ -51,3 +51,14 @@ services:
     log-db:
         image: orhanbalci/log-db:latest
         hostname: log-db
+        ports:
+            - "5432:5432"
+
+    log-puller:
+        hostname: log-puller
+        image: orhanbalci/log-puller:latest
+        environment:
+            KAFKA_SERVER: "kafka:19092"
+            POSTGRES_URL: "log-db"
+        depends_on:
+            - kafka
