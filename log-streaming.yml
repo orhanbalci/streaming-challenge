@@ -71,3 +71,16 @@ services:
         depends_on:
             - kafka
             - log-pusher
+
+    log-http-service:
+        hostname: log-http-service
+        image: orhanbalci/log-http-service:latest
+        ports:
+            - "8282:8282"
+        environment:
+            KAFKA_SERVER: "kafka:19092"
+            HOSTNAME: "0.0.0.0"
+            PORT: "8282"
+        depends_on:
+            - kafka
+            - log-transformer
