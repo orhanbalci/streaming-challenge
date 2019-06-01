@@ -62,3 +62,12 @@ services:
             POSTGRES_URL: "jdbc:postgresql://log-db:5432/log_db"
         depends_on:
             - kafka
+
+    log-transformer:
+        hostname: log-transformer
+        image: orhanbalci/log-transformer:latest
+        environment:
+            KAFKA_SERVER: "kafka:19092"
+        depends_on:
+            - kafka
+            - log-pusher
