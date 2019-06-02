@@ -59,6 +59,12 @@ reads messages from kafka logs topic and records them on postgres db. uses akka-
 reads messages from kafka logs topics and groups them according to 10 minutes time window. This module uses spark structured streaming capabilities
 
 ## log-http-service 
-uses akka-http websocket technology to serve messages from kafka log_totals topic
+uses akka-http websocket technology to serve messages from kafka log_totals topic. you can query log totals
+from this service using adress ws://localhost:8282/logs
+
+## log-dashboard
+contains web application with a single page served using nginx. Opens websocket connection to log-gttp-services. 
+You can view web page using http://localhost:8585/log-dashboard.html
+
 
 

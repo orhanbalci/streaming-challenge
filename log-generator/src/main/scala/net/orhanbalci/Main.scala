@@ -17,19 +17,35 @@ object Main extends App {
   var timeSeed     = Instant.now()
   var fileNameSeed = 0;
 
-  var nextLogFile = File(s"./logs/${nextLogFileName}")
-  mkdirs(file"./logs")
-  nextLogFile.createIfNotExists()
-  while (nextLogFile.size < 2 * 1000 * 100) {
-    nextLogFile.append(
-      f"${randomTimeStamp} ${randomLogLevel}%6s ${randomCenter}%9s ${randomLogContent(20)}"
-    )
-    nextLogFile.appendLine()
+  for (i <- 1 to 100) {
+    val logFile     = nextLogFileName
+    var nextLogFile = File(s"./logs/inner/${logFile}")
+    mkdirs(file"./logs/inner")
+    nextLogFile.createIfNotExists()
+    while (nextLogFile.size < 2 * 1000 * 100) {
+      nextLogFile
+        .append(
+          f"${randomTimeStamp} ${randomLogLevel}%6s ${randomCenter}%9s ${randomLogContent(20)}"
+        )
+        .appendLine()
+    }
+
+    mv(File(s"./logs/inner/${logFile}"), File(s"./logs/${logFile}"))
+    Thread.sleep(10000)
+    advanceTenMinutes()
+    println("!!!Generating next file!!!!")
   }
 
   def nextLogFileName = { fileNameSeed += 1; s"log_${fileNameSeed}.txt" }
+  def advanceTenMinutes() = {
+    timeSeed = Instant.ofEpochMilli(
+      timeSeed.toEpochMilli() + 600000
+      )
+  }
   def randomTimeStamp(): String = {
-    timeSeed = Instant.ofEpochMilli(timeSeed.toEpochMilli() + r.nextInt(250));
+    timeSeed = Instant.ofEpochMilli(
+      timeSeed.toEpochMilli() + r.nextInt(10)
+    );
     DateTimeFormatter
       .ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
       .withZone(ZoneId.systemDefault())

@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+    <meta charset="UTF-8">
+<head>
+	<title>Line Chart</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css">
+	<style>
+	canvas{
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+	</style>
+ <script type = "text/javascript">
+         function WebSocketRun() {
+            
+            if ("WebSocket" in window) {
+               
+               // Let us open a web socket
+               var ws = new WebSocket("ws://localhost:8282/logs");
+				
+               ws.onopen = function() {
+                    ws.send("Message to send");
+                    console.log("socket open");
+               };
+				
+               ws.onmessage = function (evt) { 
+                    var received_msg = evt.data;
+                    log_message = JSON.parse(received_msg);
+
+                    if(!config.data.labels.find(l => l === log_message.end))
+                    {
+                       config.data.labels.push(log_message.end);
+                    }
+
+				    config.data.datasets.forEach(function(dataset) {
+                        if(dataset.label === log_message.center){
+                            var index = config.data.labels.findIndex(lm => lm === log_message.end)
+                            if(index != -1){
+                                if(index < dataset.data.length - 1){
+                                    dataset.data[index] = (log_message.log_count);
+                                }
+                                else{
+                                    dataset.data.push(log_message.log_count);
+                                }
+                            }
+                        }
+				    });
+
+                    console.log(log_message);
+				    window.myLine.update();
+               };
+				
+               ws.onclose = function() { 
+                  
+               };
+            } else {
+              
+               // The browser doesn't support WebSocket
+               alert("WebSocket NOT supported by your Browser!");
+            }
+         }
+      </script>
+</head>
+
+<body>
+	<div style="width:75%;">
+		<canvas id="canvas"></canvas>
+	</div>
+	<br>
+	<br>
+	<script type="2381b2fb23c9b8dc43e3bb21-text/javascript">
+		var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		var config = {
+			type: 'line',
+			data: {
+				labels: [],
+				datasets: [{
+					label: 'Tokyo',
+					backgroundColor: 'rgb(255,99, 132)', 
+					borderColor: 'rgb(155,99,132)',
+					data: [	],
+					fill: false,
+				}, 
+                    {
+					label: 'Beijing',
+					fill: false,
+					backgroundColor: 'rgb(54,162,235)',
+					borderColor: 'rgb(54,162,235)',
+					data: [],
+				}, 
+                    {
+					label: 'Istanbul',
+					fill: false,
+					backgroundColor: 'rgb(255, 159, 64)',
+					borderColor: 'rgb(255, 159, 64)',
+					data: [	],
+                }, 
+                    {
+                    label: 'London',
+                    fill: false,
+                    backgroundColor: 'rgb(255,205, 86)',
+                    borderColor: 'rgb(255, 205, 86)',
+                    data :[],
+                }, 
+                    {
+                    label: 'Moscow',
+                    fill: false,
+                    backgroundColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgb(75, 192, 192)',
+                    data:[],
+                }
+                ]
+			},
+			options: {
+				responsive: true,
+				title: {
+					display: true,
+					text: 'Log Dashboard'
+				},
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+    		hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Time'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Log Count'
+						}
+					}]
+				}
+			}
+		};
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myLine = new Chart(ctx, config);
+            WebSocketRun();
+		};
+
+
+	</script>
+<script src="https://ajax.cloudflare.com/cdn-cgi/scripts/a2bd7673/cloudflare-static/rocket-loader.min.js" data-cf-settings="2381b2fb23c9b8dc43e3bb21-|49" defer=""></script></body>
+
+</html>
+

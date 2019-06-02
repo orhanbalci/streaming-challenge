@@ -84,3 +84,13 @@ services:
         depends_on:
             - kafka
             - log-transformer
+
+    log-dashboard:
+        hostname: log-dashboard
+        image: orhanbalci/log-dashboard:latest
+        ports:
+            - "8585:80"
+        depends_on:
+            - kafka
+            - log-transformer
+            - log-http-service
