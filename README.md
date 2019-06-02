@@ -3,32 +3,35 @@ This project aims to demonstrate log streaming capabilities of scala projects su
 All components of the project are dockerized and can be run easily on your local machine.
 
 # Prerequisites
--Install docker on your machine
--Install docker-compose
--Install psql or equivalent postgresql db query tool
--Install kafkacat or equivalent kafka querying tool
--Install any websocket client
--Install git client 
+
+* Install docker on your machine
+* Install docker-compose
+* Install psql or equivalent postgresql db query tool
+* Install kafkacat or equivalent kafka querying tool
+* Install any websocket client
+* Install git client 
 
 # How to run the systems
--Get the repository from github. 
+
+* Get the repository from github. 
 ```
 git clone https://github.com/orhanbalci/streaming-challenge
 ```
--Run system using 
+
+* Run system using 
 ```
 ./up.sh
 ```
--You can inspect messages on kafka using kafkacat. There are two topics. First one is logs
+
+* You can inspect messages on kafka using kafkacat. There are two topics. First one is logs
 which contains json structured raw log messages. Second one is log_totals which includes
 10 minutes windowed log totals per log center. 
-
 ```
 kafkacat -C -b localhost -t logs
 kafkacat -C -b localhost -t log_totals
 ```
 
--You can inspect logs written to postgresql db using tsql. Default database name is log_db
+* You can inspect logs written to postgresql db using tsql. Default database name is log_db
 and table name is logs
 ```
 psql -h localhost -U postgres log_db
