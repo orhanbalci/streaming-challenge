@@ -1,8 +1,8 @@
-#Log Streaming POC
+# Log Streaming POC
 This project aims to demonstrate log streaming capabilities of scala projects such as Spark, Akka-Streaming and Akka-Http
 All components of the project are dockerized and can be run easily on your local machine.
 
-#Prerequisites
+# Prerequisites
 -Install docker on your machine
 -Install docker-compose
 -Install psql or equivalent postgresql db query tool
@@ -10,7 +10,7 @@ All components of the project are dockerized and can be run easily on your local
 -Install any websocket client
 -Install git client 
 
-#How to run the systems
+# How to run the systems
 -Get the repository from github. 
 ```
 git clone https://github.com/orhanbalci/streaming-challenge
@@ -35,21 +35,22 @@ psql -h localhost -U postgres log_db
 select * from logs;
 ```
 
-#Components of the system
+# Components of the system
 
-##log-generator : generates fake log files and writes them into folder ./logsthis folder is mounted on docker host also
+## log-generator : generates fake log files and writes them into folder ./logsthis folder is mounted on docker host also
 
-##zookeeper : needed for kafka. Although kafka runs in single mode zookeeper is needed
+## zookeeper : needed for kafka. Although kafka runs in single mode zookeeper is needed
 
-##kafka : kafka message broker
+## kafka : kafka message broker
 
-##log-pusher : watches foolder changes on logs folder. Reads log reacords and pushes them to kafka on logs topic. This module uses Apache Spark framework structured streaming capabilities
+## log-pusher : watches foolder changes on logs folder. Reads log reacords and pushes them to kafka on logs topic. This module uses Apache Spark framework structured streaming capabilities
 
-##log-db : postgresql db. Default db is log_db. Logs are written into logs table
+## log-db : postgresql db. Default db is log_db. Logs are written into logs table
 
-##log-puller : reads messages from kafka logs topic and records them on postgres db. uses akka-streams and alpakka kafka source plus alpakka slick database sink
+## log-puller : reads messages from kafka logs topic and records them on postgres db. uses akka-streams and alpakka kafka source plus alpakka slick database sink
 
-##log-transformer : reads messages from kafka logs topics and groups them according to 10 minutes time window. This module uses spark structured streaming capabilities
+## log-transformer : reads messages from kafka logs topics and groups them according to 10 minutes time window. This module uses spark structured streaming capabilities
 
-##log-http-service : uses akka-http websocket technology to serve messages from kafka log_totals topic
+## log-http-service : uses akka-http websocket technology to serve messages from kafka log_totals topic
+
 
